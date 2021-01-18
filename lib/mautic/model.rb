@@ -63,7 +63,7 @@ module Mautic
 
       begin
         json = @connection.request((force && :put || :patch), "api/#{endpoint}/#{id}/edit", body: to_mautic)
-        assign_attributes json[endpoint.singularize]
+        assign_attributes json[data_name.singularize]
         clear_changes
       rescue ValidationError => e
         self.errors = e.errors
@@ -74,7 +74,7 @@ module Mautic
 
     def update_columns(attributes = {})
       json = @connection.request(:patch, "api/#{endpoint}/#{id}/edit", body: to_mautic(attributes))
-      assign_attributes json[endpoint.singularize]
+      assign_attributes json[data_name.singularize]
       clear_changes
     rescue ValidationError => e
       self.errors = e.errors
@@ -83,7 +83,7 @@ module Mautic
     def create
       begin
         json = @connection.request(:post, "api/#{endpoint}/#{id && "#{id}/"}new", body: to_mautic)
-        assign_attributes json[endpoint.singularize]
+        assign_attributes json[data_name.singularize]
         clear_changes
       rescue ValidationError => e
         self.errors = e.errors
@@ -144,6 +144,10 @@ module Mautic
 
     def endpoint
       self.class.endpoint
+    end
+
+    def data_name
+      @connection&.public_send(endpoint)&.data_name || endpoint
     end
 
     def assign_attributes(source = nil)
