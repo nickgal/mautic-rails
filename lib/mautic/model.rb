@@ -147,7 +147,9 @@ module Mautic
     end
 
     def data_name
-      @connection&.public_send(endpoint)&.data_name || endpoint
+      if @connection.respond_to?(endpoint)
+        @connection.public_send(endpoint).data_name
+      end || self.class.in(@connection).data_name || endpoint
     end
 
     def assign_attributes(source = nil)
