@@ -127,6 +127,8 @@ module Mautic
       data.each_with_object({}) do |(key, val), mem|
         mem[key] = if val.respond_to?(:to_mautic)
                      val.to_mautic
+                   elsif val.is_a?(Array) && val.first.is_a?(Hash)
+                     val.index_by.with_index { |_, i| i }
                    elsif val.is_a?(Array)
                      val.join("|")
                    else
