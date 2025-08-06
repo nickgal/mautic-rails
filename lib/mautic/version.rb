@@ -1,3 +1,5 @@
 module Mautic
-  VERSION = '2.6.0'
+
+  VERSION = '3.2.0'
+
 end
